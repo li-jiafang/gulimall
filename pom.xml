@@ -18,5 +18,6 @@
         <module>gulimall-product</module>
         <module>gulimall-ware</module>
         <module>renren-fast</module>
+        <module>gulimall-third-party</module>
     </modules>
 </project>
