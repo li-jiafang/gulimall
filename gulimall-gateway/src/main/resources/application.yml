@@ -27,6 +27,14 @@ spring:
             - Path=/api/product/**
           filters:
             - RewritePath=/api/(?<segment>/?.*),/$\{segment}
+              
+        #将路径为Path=/api/thirdparty/**转发至第三方服务模块
+        - id: third_party_route
+          uri: lb://gulimall-third-party
+          predicates:
+            - Path=/api/thirdparty/**
+          filters:
+            - RewritePath=/api/thirdparty/(?<segment>/?.*),/$\{segment}
 
         #将路径为Path=/api/**转发至后台管理
         - id: admin_route
