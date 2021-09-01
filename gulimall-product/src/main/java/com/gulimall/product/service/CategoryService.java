@@ -23,5 +23,7 @@ public interface CategoryService extends IService<CategoryEntity> {
      * @return
      */
     List<CategoryEntity> ListWithTree();
+
+    Long[] findCatelogPathById(Long catelogId);
 }
 

@@ -2,9 +2,7 @@ package com.gulimall.product.service.impl;
 
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -44,6 +42,23 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
                 .collect(Collectors.toList());
 
         return collect;
+    }
+
+    @Override
+    public Long[] findCatelogPathById(Long categorygId) {
+        List<Long> path = new LinkedList<>();
+        findPath(categorygId, path);
+        Collections.reverse(path);
+        Long[] objects = path.toArray(new Long[path.size()]);
+        return  objects;
+    }
+
+    private void findPath(Long categorygId, List<Long> path) {
+        if (categorygId!=0){
+            path.add(categorygId);
+            CategoryEntity byId = getById(categorygId);
+            findPath(byId.getParentCid(),path);
+        }
     }
 
     /**
