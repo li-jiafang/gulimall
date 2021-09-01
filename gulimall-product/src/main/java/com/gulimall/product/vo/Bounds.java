@@ -5,6 +5,8 @@ package com.gulimall.product.vo;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 /**
  * Auto-generated: 2019-11-26 10:50:34
  *
@@ -12,10 +14,10 @@ import lombok.Data;
  * @website http://www.bejson.com/java2pojo/
  */
 @Data
-public class Attr {
+public class Bounds {
 
-    private Long attrId;
-    private String attrName;
-    private String attrValue;
+    private BigDecimal buyBounds;
+    private BigDecimal growBounds;
+
 
 }

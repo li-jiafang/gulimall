@@ -12,10 +12,10 @@ import lombok.Data;
  * @website http://www.bejson.com/java2pojo/
  */
 @Data
-public class Attr {
+public class Images {
 
-    private Long attrId;
-    private String attrName;
-    private String attrValue;
+    private String imgUrl;
+    private int defaultImg;
+
 
 }
