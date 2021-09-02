@@ -31,17 +31,27 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
     @Override
     public List<CategoryEntity> ListWithTree() {
-        List<CategoryEntity> categoryEntities = this.list(null);
+        // 怎么拿categoryDao？
+    /*
+        * 继承了ServiceImpl<CategoryDao, CategoryEntity>
+        有个属性baseMapper，自动注入
+        * */
 
-        List<CategoryEntity> collect = categoryEntities.stream()
-                .filter(categoryEntity -> categoryEntity.getParentCid() == 0L)
-                .map(categoryEntity -> {
-                    categoryEntity.setChildren(getChildren(categoryEntity,categoryEntities));
-                    return categoryEntity;})
-                .sorted(Comparator.comparing(CategoryEntity::getSort,Comparator.nullsFirst(Integer::compareTo)))
-                .collect(Collectors.toList());
+        // 1 查出所有分类
+        List<CategoryEntity> categoryEntities = baseMapper.selectList(null);
+        // 2 组装成父子的树型结构
+        // 2.1 找到所有一级分类
+        List<CategoryEntity> level1Menus = categoryEntities.stream().filter(
+                // 找到一级
+                categoryEntity -> categoryEntity.getParentCid() == 0
+        ).map(menu->{
+            // 把当前的child属性改了之后重新返回
+            menu.setChildren(getChildren(menu,categoryEntities));
+            return menu;
+        }).sorted((menu1,menu2)->
+                menu1.getSort()-menu2.getSort()).collect(Collectors.toList());
 
-        return collect;
+        return level1Menus;
     }
 
     @Override
