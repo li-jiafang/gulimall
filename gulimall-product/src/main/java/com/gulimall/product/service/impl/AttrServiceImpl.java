@@ -174,4 +174,16 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         }
     }
 
+    @Override
+    public List<AttrEntity> getRelationAttr(Long attrgroupId) {
+        List<AttrAttrgroupRelationEntity> relationEntities = attrAttrgroupRelationDao.selectList(
+                new QueryWrapper<AttrAttrgroupRelationEntity>().eq("attr_group_id", attrgroupId)
+        );
+        List<AttrEntity> attrEntities = relationEntities.stream().map((entity) -> {
+            AttrEntity attrEntity = baseMapper.selectById(entity.getAttrId());
+            return attrEntity;
+        }).collect(Collectors.toList());
+        return attrEntities;
+    }
+
 }
