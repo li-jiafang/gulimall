@@ -200,4 +200,43 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         relationDao.deleteBatchRelation(entities);
     }
 
+    /**
+     * 查询该分组所在分类下未关联的所有属性
+     * @param attrgroupId
+     * @param params
+     * @return
+     */
+    @Override
+    public PageUtils getNoRelationAttr(Long attrgroupId, Map<String, Object> params) {
+        AttrGroupEntity attrGroupEntity = attrGroupDao.selectById(attrgroupId);
+        Long catelogId = attrGroupEntity.getCatelogId();
+
+        QueryWrapper<AttrEntity> wrapper=new QueryWrapper<AttrEntity>().eq("catelog_id", catelogId)
+                //过滤掉销售属性
+                .and((wrpper)->{
+                    wrpper.eq("attr_type", 1);
+                });
+        //模糊搜索条件
+        String key = (String) params.get("key");
+        if(!StringUtils.isEmpty(key)){
+            wrapper.and((w)->{
+                w.eq("attr_id",key).or().like("attr_name",key);
+            });
+        }
+        IPage<AttrEntity> page = this.page(
+                new Query<AttrEntity>().getPage(params),wrapper);
+        List<AttrEntity> records = page.getRecords();
+        //过滤掉已经关联的属性
+        List<AttrEntity> collect = records.stream().filter((record) -> {
+            Integer count = attrAttrgroupRelationDao.selectCount(new QueryWrapper<AttrAttrgroupRelationEntity>().eq("attr_id", record.getAttrId()));
+            if (count > 0) {
+                return false;
+            } else {
+                return true;
+            }
+        }).collect(Collectors.toList());
+        page.setRecords(collect);
+        return new PageUtils(page);
+    }
+
 }
