@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.gulimall.product.entity.AttrEntity;
+import com.gulimall.product.service.AttrAttrgroupRelationService;
 import com.gulimall.product.service.AttrService;
 import com.gulimall.product.service.CategoryService;
 import com.gulimall.product.vo.AttrGroupRelationVo;
@@ -37,6 +38,9 @@ public class AttrGroupController {
     @Autowired
     private AttrService attrService;
 
+    @Autowired
+    AttrAttrgroupRelationService relationService;
+
     /**
      * 获取该分组下所有属性
      * @param attrgroupId
@@ -59,6 +63,15 @@ public class AttrGroupController {
                             @RequestParam Map<String, Object> params){
         PageUtils page = attrService.getNoRelationAttr(attrgroupId,params);
         return R.ok().put("page", page);
+    }
+
+
+    ///product/attrgroup/attr/relation
+    @PostMapping("/attr/relation")
+    public R addRelation(@RequestBody List<AttrGroupRelationVo> vos){
+
+        relationService.saveBatch(vos);
+        return R.ok();
     }
 
 
