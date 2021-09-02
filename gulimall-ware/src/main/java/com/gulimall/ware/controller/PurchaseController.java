@@ -1,6 +1,7 @@
 package com.gulimall.ware.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import com.gulimall.ware.vo.MergeVo;
@@ -26,6 +27,20 @@ import com.gulimall.common.utils.R;
 public class PurchaseController {
     @Autowired
     private PurchaseService purchaseService;
+
+
+
+    /**
+     * 领取采购单
+     * @return
+     */
+    @PostMapping("/received")
+    public R received(@RequestBody List<Long> ids){
+
+        purchaseService.received(ids);
+
+        return R.ok();
+    }
 
 
     ///ware/purchase/unreceive/list
